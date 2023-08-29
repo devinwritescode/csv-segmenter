@@ -1,6 +1,11 @@
 import React, { useState, useRef } from "react";
 import Papa from "papaparse";
 import FileSegmenter from "./FileSegmenter";
+import {
+  XMarkIcon,
+  ArrowUpTrayIcon,
+  BeakerIcon,
+} from "@heroicons/react/24/solid";
 
 const FileUploader: React.FC = () => {
   const [isFileValid, setIsFileValid] = useState<boolean>(true);
@@ -8,6 +13,12 @@ const FileUploader: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [parsedData, setParsedData] = useState<string[][]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resetFileState = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -43,8 +54,11 @@ const FileUploader: React.FC = () => {
   };
 
   return (
-    <div className="text-white min-h-screen p-6 text-center justify-center">
-      <h1 className="text-4xl mb-8 font-semibold">CSV Segmenter</h1>
+    <div className="text-white min-h-screen p-6 text-center justify-center max-w-5xl">
+      <div className=" m-auto gap-3 max-w-md flex justify-center mb-10">
+        <BeakerIcon className="w-10 fill-current text-slate-100 bg-slate-700 rounded px-2" />
+        <h1 className="text-4xl font-semibold m-0">CSV Segmenter</h1>
+      </div>
 
       {!isFileValid && (
         <p className="bg-red-600 text-white px-4 py-2 rounded mb-4">
@@ -72,9 +86,9 @@ const FileUploader: React.FC = () => {
             <div>
               <button
                 onClick={removeFile}
-                className="rounded outline outline-1 outline-slate-400 px-2 py- first-letter:rounded text-slate-400 hover:bg-red-500 hover:text-slate-100 hover:outline-slate-100"
+                className="rounded outline outline-1 px-1 py-1 first-letter:rounded text-slate-400 hover:bg-red-500 hover:text-white hover:outline-slate-100"
               >
-                X
+                <XMarkIcon className="fill-inherit w-5 h-5" />
               </button>
             </div>
             <div className="flex items-center gap-3">
@@ -86,14 +100,16 @@ const FileUploader: React.FC = () => {
             fileName={selectedFile.name}
             parsedData={parsedData}
             onSegmentError={setSegmentError}
+            onRefresh={resetFileState}
           />
         </>
       ) : (
         <button
           onClick={handleButtonClick}
-          className="bg-slate-800 text-white px-4 py-2 rounded outline outline-1 font-semibold hover:bg-rvx"
+          className="flex m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 font-semibold hover:bg-rvx"
         >
           Upload File
+          <ArrowUpTrayIcon className="w-5 fill-inherit" />
         </button>
       )}
     </div>

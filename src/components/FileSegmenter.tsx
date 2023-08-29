@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
+import { ArrowPathIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 
 interface FileSegmenterProps {
   fileName: string;
   parsedData: string[][];
   onSegmentError: (error: string | null) => void; // Callback to set error in parent
+  onRefresh: () => void;
 }
 
 const FileSegmenter: React.FC<FileSegmenterProps> = ({
@@ -14,6 +16,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
 }) => {
   const [startSegment, setStartSegment] = useState<number | null>(null);
   const [endSegment, setEndSegment] = useState<number | null>(null);
+  const [segmentCompleted, setSegmentCompleted] = useState<boolean>(false);
 
   const handleSegment = () => {
     if (!startSegment || !endSegment) return;
@@ -52,6 +55,8 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
 
     // Cleanup
     URL.revokeObjectURL(url);
+
+    setSegmentCompleted(true);
   };
 
   return (
@@ -78,10 +83,24 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
       </div>
       <button
         onClick={handleSegment}
-        className="bg-slate-800 text-white px-4 py-2 rounded outline outline-1 font-semibold hover:bg-rvx"
+        className="flex m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 font-semibold hover:bg-rvx"
       >
         Segment
+        <ArrowDownTrayIcon className="w-5 fill-inherit" />
       </button>
+      {segmentCompleted && (
+        <button
+          onClick={() => {
+            setSegmentCompleted(false); // Reset segment state
+            setStartSegment(null); // Reset start segment
+            setEndSegment(null); // Reset end segment
+            onSegmentError(null); // Clear any existing errors
+          }}
+          className="rounded outline outline-1 px-1 py-1 first-letter:rounded text-slate-400 hover:bg-rvx hover:text-white hover:outline-slate-100"
+        >
+          <ArrowPathIcon className="fill-inherit w-5 h-5" />
+        </button>
+      )}
     </div>
   );
 };
