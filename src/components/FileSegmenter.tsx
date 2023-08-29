@@ -13,6 +13,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
   fileName,
   parsedData,
   onSegmentError,
+  onRefresh,
 }) => {
   const [startSegment, setStartSegment] = useState<number | null>(null);
   const [endSegment, setEndSegment] = useState<number | null>(null);
@@ -46,21 +47,24 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
     const a = document.createElement("a");
     a.href = url;
 
-    // Here we modify the name of the downloaded file
+    // Modify the name of the downloaded file
     const originalFileName = fileName.split(".").slice(0, -1).join(".");
     const fileExtension = fileName.split(".").pop();
     a.download = `${originalFileName} - (${startSegment}-${endSegment}).${fileExtension}`;
 
     a.click();
 
-    // Cleanup
+    // Cleanup and state reset
     URL.revokeObjectURL(url);
-
     setSegmentCompleted(true);
+
+    // Clear the 'start segment' and 'end segment' inputs
+    setStartSegment(null);
+    setEndSegment(null);
   };
 
   return (
-    <div className="bg-gray-800 p-4 rounded shadow-md flex items-center gap-6">
+    <div className="bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded flex items-center gap-6 w-full ">
       <div className="flex items-center gap-4">
         <label className="flex items-center gap-2">
           <span>Start Segment:</span>
@@ -68,7 +72,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
             type="number"
             value={startSegment || ""}
             onChange={(e) => setStartSegment(parseInt(e.target.value))}
-            className="bg-gray-700 text-white p-2 rounded border border-gray-600"
+            className="bg-slate-700 text-slate-100 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
           />
         </label>
         <label className="flex items-center gap-2">
@@ -77,13 +81,13 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
             type="number"
             value={endSegment || ""}
             onChange={(e) => setEndSegment(parseInt(e.target.value))}
-            className="bg-gray-700 text-white p-2 rounded border border-gray-600"
+            className="bg-slate-700 text-slate-100 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
           />
         </label>
       </div>
       <button
         onClick={handleSegment}
-        className="flex m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 font-semibold hover:bg-rvx"
+        className="flex m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-semibold hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg transition-all"
       >
         Segment
         <ArrowDownTrayIcon className="w-5 fill-inherit" />
@@ -95,8 +99,9 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
             setStartSegment(null); // Reset start segment
             setEndSegment(null); // Reset end segment
             onSegmentError(null); // Clear any existing errors
+            onRefresh();
           }}
-          className="rounded outline outline-1 px-1 py-1 first-letter:rounded text-slate-400 hover:bg-rvx hover:text-white hover:outline-slate-100"
+          className="rounded outline outline-1 outline-slate-700 p-2 first-letter:rounded text-slate-400 hover:bg-blue-800 hover:text-slate-100 hover:outline-blue-800 hover:shadow-md transition-all"
         >
           <ArrowPathIcon className="fill-inherit w-5 h-5" />
         </button>

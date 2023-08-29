@@ -8,6 +8,8 @@ export default {
     extend: {
       backgroundColor: {
         rvx: "#0039cb",
+        buttonBG:
+          "[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-gray-700 via-gray-900 to-black",
       },
       textColor: {
         rvx: "#0039cb",
