@@ -78,7 +78,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
       </div>
       <button
         onClick={handleSegment}
-        className="bg-slate-800 text-white px-4 py-2 rounded outline font-semibold hover:bg-rvx"
+        className="bg-slate-800 text-white px-4 py-2 rounded outline outline-1 font-semibold hover:bg-rvx"
       >
         Segment
       </button>

@@ -72,7 +72,7 @@ const FileUploader: React.FC = () => {
             <div>
               <button
                 onClick={removeFile}
-                className="outline pr-2 pl-2 pt-1 pb-1 rounded hover:bg-red-500"
+                className="rounded outline outline-1 outline-slate-400 px-2 py- first-letter:rounded text-slate-400 hover:bg-red-500 hover:text-slate-100 hover:outline-slate-100"
               >
                 X
               </button>
@@ -91,7 +91,7 @@ const FileUploader: React.FC = () => {
       ) : (
         <button
           onClick={handleButtonClick}
-          className="bg-slate-800 text-white px-4 py-2 rounded outline font-semibold hover:bg-rvx"
+          className="bg-slate-800 text-white px-4 py-2 rounded outline outline-1 font-semibold hover:bg-rvx"
         >
           Upload File
         </button>
