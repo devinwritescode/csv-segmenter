@@ -43,8 +43,8 @@ const FileUploader: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-6">
-      <h1 className="text-4xl mb-4 font-semibold">CSV Segmenter</h1>
+    <div className="text-white min-h-screen p-6 text-center justify-center">
+      <h1 className="text-4xl mb-8 font-semibold">CSV Segmenter</h1>
 
       {!isFileValid && (
         <p className="bg-red-600 text-white px-4 py-2 rounded mb-4">
