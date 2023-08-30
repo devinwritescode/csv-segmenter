@@ -10,19 +10,22 @@ const FileBatcher: React.FC<{
   onBatchError: (error: string | null) => void;
 }> = ({ fileName, parsedData, onBatchError }) => {
   const [batchSize, setBatchSize] = useState<number | null>(null);
+  const [errorField, setErrorField] = useState<string | null>(null);
 
   const createBatches = () => {
     if (!batchSize) {
-      onBatchError("Batch size must be a number.");
+      onBatchError("Error | Refresh Browser");
       return;
     }
 
     if (batchSize >= parsedData.length) {
       onBatchError("Batch size exceeds row count.");
+      setErrorField("batchSize");
       return;
     }
 
     onBatchError(null);
+    setErrorField(null);
 
     const zip = new JSZip();
 
@@ -52,7 +55,9 @@ const FileBatcher: React.FC<{
         type="number"
         placeholder="Batch size"
         onChange={(e) => setBatchSize(Number(e.target.value))}
-        className="bg-slate-700 text-slate-100 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg placeholder:text-slate-400"
+        className={`bg-slate-700 text-slate-400 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg placeholder:text-slate-400 ${
+          errorField === "batchSize" ? "border-rose-600" : "border-slate-600"
+        }`}
       />
       <button
         onClick={createBatches}

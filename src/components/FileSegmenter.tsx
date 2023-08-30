@@ -18,12 +18,14 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
   const [startSegment, setStartSegment] = useState<number | null>(null);
   const [endSegment, setEndSegment] = useState<number | null>(null);
   const [segmentCompleted, setSegmentCompleted] = useState<boolean>(false);
+  const [errorField, setErrorField] = useState<string | null>(null);
 
   const handleSegment = () => {
     if (!startSegment || !endSegment) return;
 
     if (startSegment > endSegment) {
       onSegmentError("Start segment cannot be greater than end segment.");
+      setErrorField("allSegments");
       return;
     }
 
@@ -31,9 +33,11 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
       onSegmentError(
         "Selected segment exceeds the number of rows in your file."
       );
+      setErrorField("endSegment");
       return;
     }
     onSegmentError(null);
+    setErrorField(null);
 
     // Get the headers and the desired segment
     const headers = [parsedData[0]];
@@ -77,7 +81,11 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
             type="number"
             value={startSegment || ""}
             onChange={(e) => setStartSegment(parseInt(e.target.value))}
-            className="bg-slate-700 text-slate-400 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
+            className={`bg-slate-700 text-slate-400 p-2 rounded border ${
+              errorField === "allSegments"
+                ? "border-rose-600"
+                : "border-slate-600"
+            } focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg`}
           />
         </label>
         <label className="flex items-center gap-2 text-slate-400">
@@ -86,7 +94,11 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
             type="number"
             value={endSegment || ""}
             onChange={(e) => setEndSegment(parseInt(e.target.value))}
-            className="bg-slate-700 text-slate-400 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
+            className={`bg-slate-700 text-slate-400 p-2 rounded border ${
+              errorField === "endSegment" || errorField === "allSegments"
+                ? "border-rose-600"
+                : "border-slate-600"
+            } focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg`}
           />
         </label>
       </div>

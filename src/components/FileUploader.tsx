@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import Papa from "papaparse";
 import FileSegmenter from "./FileSegmenter";
 import FileBatcher from "./FileBatcher";
-import ErrorMessage from "./ErrorMessage"; // make sure to import it
+import ErrorMessage from "./ErrorMessage";
 
 import {
   XMarkIcon,
@@ -12,9 +12,10 @@ import {
 } from "@heroicons/react/24/outline";
 
 const FileUploader: React.FC = () => {
-  const [isFileValid, setIsFileValid] = useState<boolean>(true);
   const [segmentError, setSegmentError] = useState<string | null>(null);
+  const [batchError, setBatchError] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [errorField, setErrorField] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [parsedData, setParsedData] = useState<string[][]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -35,12 +36,14 @@ const FileUploader: React.FC = () => {
       // Check for file extension
       if (file.type !== "text/csv") {
         setUploadError("Invalid file. Please upload a .CSV");
+        setErrorField("uploadError");
         return;
       }
 
       // Check for file size (500 * 1024 * 1024 = 524288000 bytes = 500MB)
       if (file.size > 524288000) {
         setUploadError("File size too large. Max file size is 500mb");
+        setErrorField("uploadError");
         return;
       }
 
@@ -51,7 +54,6 @@ const FileUploader: React.FC = () => {
         skipEmptyLines: true,
         complete: (result) => {
           setParsedData(result.data as string[][]);
-          setIsFileValid(true);
         },
       });
     }
@@ -67,6 +69,7 @@ const FileUploader: React.FC = () => {
       fileInputRef.current.value = "";
     }
     setSegmentError(null);
+    setBatchError(null);
   };
 
   const handleDragEvents = (e: React.DragEvent) => {
@@ -97,20 +100,35 @@ const FileUploader: React.FC = () => {
   };
 
   return (
-    <div className="p-4 bg-slate-900  flex justify-content items-center max-h-max rounded-md outline outline-1 outline-slate-700">
-      <div className="flex flex-col text-slate-100 p-6 items-center justify-center max-w-5xl">
+    <div className="p-4 bg-slate-900 flex items-center rounded-md outline outline-1 outline-slate-700">
+      <div className="flex flex-col text-slate-100 p-6 items-center justify-center">
         <div className="gap-3 flex justify-center mb-10">
           <BeakerIcon className="w-10 fill-current text-slate-100 bg-slate-800 rounded px-2 outline outline-1 outline-slate-700" />
           <h1 className="text-4xl font-medium m-0">CSV Segmenter</h1>
         </div>
 
-        {!isFileValid && (
-          <p className="bg-orange-500 text-white px-4 py-2 rounded mb-4">
-            Invalid file! Please choose a .CSV file.
-          </p>
+        {uploadError && (
+          <ErrorMessage
+            message={uploadError}
+            setErrorField={setErrorField}
+            errorType={`${errorField}`}
+          />
         )}
-        {uploadError && <ErrorMessage message={uploadError} />}
-        {segmentError && <ErrorMessage message={segmentError} />}
+        {segmentError && (
+          <ErrorMessage
+            message={segmentError}
+            setErrorField={setErrorField}
+            errorType={`${errorField}`}
+          />
+        )}
+
+        {batchError && (
+          <ErrorMessage
+            message={batchError}
+            setErrorField={setErrorField}
+            errorType={`${errorField}`}
+          />
+        )}
 
         <input
           type="file"
@@ -142,7 +160,7 @@ const FileUploader: React.FC = () => {
               <FileBatcher
                 fileName={selectedFile.name}
                 parsedData={parsedData}
-                onBatchError={setSegmentError}
+                onBatchError={setBatchError}
               />
             </div>
             <FileSegmenter
@@ -159,7 +177,11 @@ const FileUploader: React.FC = () => {
             onDragEnter={handleDragEvents}
             onDragLeave={handleDragEvents}
             onDrop={handleDrop}
-            className="font-normal flex justify-center items-center w-full h-40 m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline-dashed outline-1 outline-slate-600 hover:bg-slate-700 hover:outline-slate-500 hover:shadow-lg focus:bg-slate-700 focus:outline-slate-500 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
+            className={`font-normal flex justify-center items-center w-full h-40 m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline-dashed outline-1 outline-slate-600 hover:bg-slate-700 hover:outline-slate-500 hover:shadow-lg focus:bg-slate-700 focus:outline-slate-500 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms ${
+              errorField === "uploadError"
+                ? "outline-rose-600"
+                : "outline-slate-700"
+            }`}
           >
             Select or Drag and Drop File
             <ArrowUpTrayIcon className="w-5 fill-inherit" />
