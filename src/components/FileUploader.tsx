@@ -5,6 +5,7 @@ import {
   XMarkIcon,
   ArrowUpTrayIcon,
   BeakerIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 
 const FileUploader: React.FC = () => {
@@ -53,12 +54,38 @@ const FileUploader: React.FC = () => {
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    const file = files[0];
+    if (file) {
+      const event = new Event("input", { bubbles: true });
+      const target = fileInputRef.current;
+      if (target) {
+        target.files = e.dataTransfer.files;
+        target.dispatchEvent(event);
+      }
+    }
+  };
+
   return (
     <div className="p-4 bg-slate-900  flex justify-content items-center max-h-max rounded-md outline outline-1 outline-slate-700">
       <div className="flex flex-col text-slate-100 p-6 items-center justify-center max-w-5xl">
         <div className="gap-3 flex justify-center mb-10">
           <BeakerIcon className="w-10 fill-current text-slate-100 bg-slate-800 rounded px-2 outline outline-1 outline-slate-700" />
-          <h1 className="text-4xl font-semibold m-0">CSV Segmenter</h1>
+          <h1 className="text-4xl font-medium m-0">CSV Segmenter</h1>
         </div>
 
         {!isFileValid && (
@@ -87,13 +114,17 @@ const FileUploader: React.FC = () => {
               <div>
                 <button
                   onClick={removeFile}
-                  className="rounded outline outline-1 outline-slate-700 px-1 py-1 first-letter:rounded text-slate-400 hover:bg-rose-600 hover:text-slate-200 hover:outline-slate-200 transition-all"
+                  className="rounded outline outline-1 outline-slate-700 px-1 py-1 first-letter:rounded text-slate-400 hover:text-slate-200 hover:outline-slate-200 transition-ease-in-out transition-all transition-duration: 225ms;
+                  "
                 >
                   <XMarkIcon className="fill-inherit w-5 h-5" />
                 </button>
               </div>
               <div className="flex items-center gap-3">
-                <span className="p-2 pr-4 pl-4 flex items-center bg-slate-700 font-semibold rounded underline outline outline-1 outline-slate-600">{`${selectedFile.name}`}</span>
+                <span className="p-2 pr-4 pl-4 flex items-center bg-slate-700 font-normal rounded outline outline-1 outline-slate-600">
+                  <DocumentTextIcon className="w-4 mr-2" />{" "}
+                  {`${selectedFile.name}`}
+                </span>
                 <span>{`${parsedData.length} rows`}</span>
               </div>
             </div>
@@ -107,9 +138,13 @@ const FileUploader: React.FC = () => {
         ) : (
           <button
             onClick={handleButtonClick}
-            className="flex m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-semibold hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg transition-all"
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className="font-normal flex justify-center items-center w-full h-40 m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline-dashed outline-1 outline-slate-600 hover:bg-slate-700 hover:outline-slate-500 hover:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
           >
-            Upload File
+            Select or Drag and Drop File
             <ArrowUpTrayIcon className="w-5 fill-inherit" />
           </button>
         )}
