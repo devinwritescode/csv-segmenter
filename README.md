@@ -1,27 +1,79 @@
-# React + TypeScript + Vite
+# RVX Labs | CSV Segmenter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## About this Project
 
-Currently, two official plugins are available:
+RVX Labs | CSV Segmenter is a tool designed to make working with CSV files simpler and more efficient, whether you need to segment large files into smaller chunks or divide them into batches for easier data manipulation.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Features
 
-## Expanding the ESLint configuration
+**CSV Segmenting**: Segment large CSV files from a specified start index to an end index.
+**Batching**: Divide large CSV files into smaller, more manageable batches of a specified size.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Technologies
 
-- Configure the top-level `parserOptions` property like this:
+This project was built using **React** + **Vite** + **Typescript** and **SWC**.
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+The core functionality includes the following libraries:
+
+- **PapaParse** for CSV parsing
+- **JSZip** for creating ZIP files
+- **FileSaver** for saving files.
+
+The styling is done via **Tailwind**.
+
+## How to Install and Run the Project
+
+### Prerequisites
+
+- Node.js installed
+- Yarn or npm installed
+
+### Steps
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/devinwritescode/csv-segmenter.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Navigate into the project directory:
+
+```bash
+cd csv-segmenter
+```
+
+3. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+4. Start the development server:
+
+```bash
+npm run dev
+# or
+yarn run dev
+```
+
+5. Open your web browser and visit http://localhost:3000.
+
+## How to Use the Segmenter
+
+View Step-by-Step instructions on Scribe http://bit.ly/csv-segmenter-demo
+
+1. **Upload CSV File**: Click on the "Upload" button to upload your CSV file or drag and drop a file.
+
+2. **Select Segmentation**: Enter the starting and ending indices for the segment you want to extract.
+
+3. **Segment**: Click on the "Segment" button to download the segment as a new CSV file.
+
+4. **Batching**: Enter the desired batch size and click the "Create Batches" button. This will create a zip file containing your data divided into batches.
+
+5. **Download Zip**: Once the batching is done, download the Zip file that has been generated.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE.md file for details.

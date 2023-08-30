@@ -123,7 +123,7 @@ const FileUploader: React.FC = () => {
                   <DocumentTextIcon className="w-4 mr-2" />{" "}
                   {`${selectedFile.name}`}
                 </span>
-                <span>{`${parsedData.length} rows`}</span>
+                <span className="text-slate-400">{`${parsedData.length} rows`}</span>
               </div>
               <FileBatcher
                 fileName={selectedFile.name}
