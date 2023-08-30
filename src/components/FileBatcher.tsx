@@ -4,23 +4,25 @@ import { saveAs } from "file-saver";
 import Papa from "papaparse";
 import { Square2StackIcon } from "@heroicons/react/24/outline"; // Replace with the correct import
 
-const FileBatcher: React.FC<{ fileName: string; parsedData: string[][] }> = ({
-  fileName,
-  parsedData,
-}) => {
+const FileBatcher: React.FC<{
+  fileName: string;
+  parsedData: string[][];
+  onBatchError: (error: string | null) => void;
+}> = ({ fileName, parsedData, onBatchError }) => {
   const [batchSize, setBatchSize] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const createBatches = () => {
     if (!batchSize) {
-      setError("Batch size must be a number.");
+      onBatchError("Batch size must be a number.");
       return;
     }
 
     if (batchSize >= parsedData.length) {
-      setError("Batch size exceeds row count.");
+      onBatchError("Batch size exceeds row count.");
       return;
     }
+
+    onBatchError(null);
 
     const zip = new JSZip();
 
@@ -59,7 +61,6 @@ const FileBatcher: React.FC<{ fileName: string; parsedData: string[][] }> = ({
         Create Batches
         <Square2StackIcon className="w-5" />{" "}
       </button>
-      {error && <div className="error">{error}</div>}
     </div>
   );
 };

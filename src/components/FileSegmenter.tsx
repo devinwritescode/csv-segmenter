@@ -22,9 +22,14 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
   const handleSegment = () => {
     if (!startSegment || !endSegment) return;
 
+    if (startSegment > endSegment) {
+      onSegmentError("Start segment cannot be greater than end segment.");
+      return;
+    }
+
     if (endSegment > parsedData.length || startSegment > endSegment) {
       onSegmentError(
-        "Selected segment exceeds the number of rows in your file or is invalid."
+        "Selected segment exceeds the number of rows in your file."
       );
       return;
     }
@@ -66,28 +71,28 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
   return (
     <div className="bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded flex items-center gap-6 w-full ">
       <div className="flex items-center gap-4">
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-2 text-slate-400">
           <span>Start Segment:</span>
           <input
             type="number"
             value={startSegment || ""}
             onChange={(e) => setStartSegment(parseInt(e.target.value))}
-            className="bg-slate-700 text-slate-100 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
+            className="bg-slate-700 text-slate-400 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
           />
         </label>
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-2 text-slate-400">
           <span>End Segment:</span>
           <input
             type="number"
             value={endSegment || ""}
             onChange={(e) => setEndSegment(parseInt(e.target.value))}
-            className="bg-slate-700 text-slate-100 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
+            className="bg-slate-700 text-slate-400 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg"
           />
         </label>
       </div>
       <button
         onClick={handleSegment}
-        className="flex m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
+        className="flex ml-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
       >
         Segment
         <ArrowDownTrayIcon className="w-5 fill-inherit" />

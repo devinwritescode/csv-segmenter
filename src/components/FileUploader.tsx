@@ -7,7 +7,8 @@ import {
   ArrowUpTrayIcon,
   BeakerIcon,
   DocumentTextIcon,
-} from "@heroicons/react/24/solid";
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 
 const FileUploader: React.FC = () => {
   const [isFileValid, setIsFileValid] = useState<boolean>(true);
@@ -53,6 +54,7 @@ const FileUploader: React.FC = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    setSegmentError(null);
   };
 
   const handleDragEvents = (e: React.DragEvent) => {
@@ -84,13 +86,14 @@ const FileUploader: React.FC = () => {
         </div>
 
         {!isFileValid && (
-          <p className="bg-red-600 text-white px-4 py-2 rounded mb-4">
-            Invalid file! Please choose a CSV with less than 50,000 rows.
+          <p className="bg-orange-500 text-white px-4 py-2 rounded mb-4">
+            Invalid file! Please choose a .CSV file.
           </p>
         )}
 
         {segmentError && (
-          <p className="bg-red-600 text-white px-4 py-2 rounded mb-4">
+          <p className="flex items-center justify-center gap-3 bg-rose-700 text-slate-300 px-4 py-2 rounded mb-4">
+            <ExclamationTriangleIcon className="w-5 h-5" />
             {segmentError}
           </p>
         )}
@@ -125,6 +128,7 @@ const FileUploader: React.FC = () => {
               <FileBatcher
                 fileName={selectedFile.name}
                 parsedData={parsedData}
+                onBatchError={setSegmentError}
               />
             </div>
             <FileSegmenter
