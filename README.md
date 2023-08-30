@@ -50,7 +50,7 @@ npm install
 yarn install
 ```
 
-4. Start the development server:
+4. Start the development server (Vite):
 
 ```bash
 npm run dev

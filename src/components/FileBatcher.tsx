@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
-import { FolderArrowDownIcon } from "@heroicons/react/24/outline"; // Replace with the correct import
+import { FolderArrowDownIcon } from "@heroicons/react/24/outline";
 
 const FileBatcher: React.FC<{
   fileName: string;
@@ -26,7 +26,7 @@ const FileBatcher: React.FC<{
 
     const zip = new JSZip();
 
-    // Your logic to divide `parsedData` into batches and add them to the ZIP
+    // Logic to divide `parsedData` into batches and add them to the ZIP
     for (let i = 0, j = parsedData.length; i < j; i += batchSize) {
       const tempArray = parsedData.slice(i, i + batchSize);
       const csv = Papa.unparse(tempArray);

@@ -77,6 +77,13 @@ const FileUploader: React.FC = () => {
     }
   };
 
+  const truncateFilename = (filename: string, maxLength: number) => {
+    if (filename.length > maxLength) {
+      return `${filename.substring(0, maxLength - 3)}...`;
+    }
+    return filename;
+  };
+
   return (
     <div className="p-4 bg-slate-900  flex justify-content items-center max-h-max rounded-md outline outline-1 outline-slate-700">
       <div className="flex flex-col text-slate-100 p-6 items-center justify-center max-w-5xl">
@@ -120,8 +127,8 @@ const FileUploader: React.FC = () => {
               </div>
               <div className="flex items-center gap-3">
                 <span className="p-2 pr-4 pl-4 flex items-center bg-slate-700 font-normal rounded outline outline-1 outline-slate-600">
-                  <DocumentTextIcon className="w-4 mr-2" />{" "}
-                  {`${selectedFile.name}`}
+                  <DocumentTextIcon className="w-4 mr-2" />
+                  {truncateFilename(selectedFile.name, 25)}
                 </span>
                 <span className="text-slate-400">{`${parsedData.length} rows`}</span>
               </div>
