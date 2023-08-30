@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
-import { Square2StackIcon } from "@heroicons/react/24/outline"; // Replace with the correct import
+import { FolderArrowDownIcon } from "@heroicons/react/24/outline"; // Replace with the correct import
 
 const FileBatcher: React.FC<{
   fileName: string;
@@ -59,7 +59,7 @@ const FileBatcher: React.FC<{
         className="flex items-center m-auto gap-2 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
       >
         Create Batches
-        <Square2StackIcon className="w-5" />{" "}
+        <FolderArrowDownIcon className="w-5" />{" "}
       </button>
     </div>
   );
