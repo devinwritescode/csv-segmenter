@@ -56,7 +56,7 @@ const FileBatcher: React.FC<{
       />
       <button
         onClick={createBatches}
-        className="flex items-center m-auto gap-2 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
+        className="flex items-center m-auto gap-2 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg focus:outline-blue-800 focus:bg-blue-800 focus:text-slate-100 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
       >
         Create Batches
         <FolderArrowDownIcon className="w-5" />{" "}

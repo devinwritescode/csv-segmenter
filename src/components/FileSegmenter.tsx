@@ -92,7 +92,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
       </div>
       <button
         onClick={handleSegment}
-        className="flex ml-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
+        className="flex ml-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg focus:outline-blue-800 focus:bg-blue-800 focus:text-slate-100 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
       >
         Segment
         <ArrowDownTrayIcon className="w-5 fill-inherit" />
@@ -106,7 +106,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
             onSegmentError(null); // Clear any existing errors
             onRefresh();
           }}
-          className="rounded outline outline-1 outline-slate-700 p-2 first-letter:rounded text-slate-400 hover:bg-blue-800 hover:text-slate-100 hover:outline-blue-800 hover:shadow-md transition-ease-in-out transition-all transition-duration: 225ms"
+          className="rounded outline outline-1 outline-slate-700 p-2 first-letter:rounded text-slate-400 hover:bg-blue-800 hover:text-slate-100 hover:outline-blue-800 hover:shadow-md focus:outline-blue-800 focus:bg-blue-800 focus:text-slate-100 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
         >
           <ArrowPathIcon className="fill-inherit w-5 h-5" />
         </button>

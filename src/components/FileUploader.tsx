@@ -119,7 +119,7 @@ const FileUploader: React.FC = () => {
               <div>
                 <button
                   onClick={removeFile}
-                  className="rounded outline outline-1 outline-slate-700 px-1 py-1 first-letter:rounded text-slate-400 hover:text-slate-200 hover:outline-slate-200 transition-ease-in-out transition-all transition-duration: 225ms;
+                  className="rounded outline outline-1 outline-slate-700 px-1 py-1 text-slate-400 hover:text-slate-200 hover:outline-slate-200 focus:text-slate-200 focus:outline-slate-200 transition-ease-in-out transition-all transition-duration: 225ms;
                   "
                 >
                   <XMarkIcon className="fill-inherit w-5 h-5" />
@@ -152,7 +152,7 @@ const FileUploader: React.FC = () => {
             onDragEnter={handleDragEvents}
             onDragLeave={handleDragEvents}
             onDrop={handleDrop}
-            className="font-normal flex justify-center items-center w-full h-40 m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline-dashed outline-1 outline-slate-600 hover:bg-slate-700 hover:outline-slate-500 hover:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
+            className="font-normal flex justify-center items-center w-full h-40 m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline-dashed outline-1 outline-slate-600 hover:bg-slate-700 hover:outline-slate-500 hover:shadow-lg focus:bg-slate-700 focus:outline-slate-500 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
           >
             Select or Drag and Drop File
             <ArrowUpTrayIcon className="w-5 fill-inherit" />
