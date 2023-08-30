@@ -2,17 +2,19 @@ import React, { useState, useRef } from "react";
 import Papa from "papaparse";
 import FileSegmenter from "./FileSegmenter";
 import FileBatcher from "./FileBatcher";
+import ErrorMessage from "./ErrorMessage"; // make sure to import it
+
 import {
   XMarkIcon,
   ArrowUpTrayIcon,
   BeakerIcon,
   DocumentTextIcon,
-  ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 
 const FileUploader: React.FC = () => {
   const [isFileValid, setIsFileValid] = useState<boolean>(true);
   const [segmentError, setSegmentError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [parsedData, setParsedData] = useState<string[][]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -26,18 +28,28 @@ const FileUploader: React.FC = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
+    // Reset any previous errors
+    setUploadError(null);
+
     if (file) {
+      // Check for file extension
+      if (file.type !== "text/csv") {
+        setUploadError("Invalid file. Please upload a .CSV");
+        return;
+      }
+
+      // Check for file size (500 * 1024 * 1024 = 524288000 bytes = 500MB)
+      if (file.size > 524288000) {
+        setUploadError("File size too large. Max file size is 500mb");
+        return;
+      }
+
+      // Continue with existing logic
       setSelectedFile(file);
 
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: (result) => {
-          if (result.data.length > 50000) {
-            setIsFileValid(false);
-            alert("The file exceeds the maximum row limit of 50,000.");
-            return;
-          }
-
           setParsedData(result.data as string[][]);
           setIsFileValid(true);
         },
@@ -97,13 +109,8 @@ const FileUploader: React.FC = () => {
             Invalid file! Please choose a .CSV file.
           </p>
         )}
-
-        {segmentError && (
-          <p className="flex items-center justify-center gap-3 bg-rose-700 text-slate-300 px-4 py-2 rounded mb-4">
-            <ExclamationTriangleIcon className="w-5 h-5" />
-            {segmentError}
-          </p>
-        )}
+        {uploadError && <ErrorMessage message={uploadError} />}
+        {segmentError && <ErrorMessage message={segmentError} />}
 
         <input
           type="file"
