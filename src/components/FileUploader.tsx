@@ -3,7 +3,7 @@ import Papa from "papaparse";
 import FileSegmenter from "./FileSegmenter";
 import FileBatcher from "./FileBatcher";
 import ErrorMessage from "./ui/ErrorMessage";
-import UploadButton from "./ui/upload";
+import UploadButton from "./ui/UploadButton";
 import useDragAndDrop from "../hooks/useDragAndDrop";
 import IconButton from "./ui/IconButton";
 
