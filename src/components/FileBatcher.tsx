@@ -3,12 +3,20 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
 import { FolderArrowDownIcon } from "@heroicons/react/24/outline";
+import Button from "./ui/Button.tsx";
+import InputWithPlaceholder from "./ui/InputWithPlaceholder";
 
-const FileBatcher: React.FC<{
+interface FileBatcherProps {
   fileName: string;
   parsedData: string[][];
   onBatchError: (error: string | null) => void;
-}> = ({ fileName, parsedData, onBatchError }) => {
+}
+
+const FileBatcher: React.FC<FileBatcherProps> = ({
+  fileName,
+  parsedData,
+  onBatchError,
+}) => {
   const [batchSize, setBatchSize] = useState<number | null>(null);
   const [errorField, setErrorField] = useState<string | null>(null);
 
@@ -21,6 +29,7 @@ const FileBatcher: React.FC<{
     if (batchSize >= parsedData.length) {
       onBatchError("Batch size exceeds row count.");
       setErrorField("batchSize");
+
       return;
     }
 
@@ -49,23 +58,32 @@ const FileBatcher: React.FC<{
     });
   };
 
+  const renderInputField = () => (
+    <InputWithPlaceholder
+      type="number"
+      placeholder="Batch size"
+      onChange={(value) => {
+        if (typeof value === "number") {
+          setBatchSize(value);
+        }
+      }}
+      errorField={errorField}
+      fieldName="batchSize"
+    />
+  );
+
+  const renderCreateButton = () => (
+    <Button
+      onClick={createBatches}
+      text="Create Batches"
+      Icon={FolderArrowDownIcon}
+    />
+  );
+
   return (
     <div className="ml-auto flex items-center gap-4">
-      <input
-        type="number"
-        placeholder="Batch size"
-        onChange={(e) => setBatchSize(Number(e.target.value))}
-        className={`bg-slate-700 text-slate-400 p-2 rounded border border-slate-600 focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg placeholder:text-slate-400 ${
-          errorField === "batchSize" ? "border-rose-600" : "border-slate-600"
-        }`}
-      />
-      <button
-        onClick={createBatches}
-        className="flex items-center m-auto gap-2 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg focus:outline-blue-800 focus:bg-blue-800 focus:text-slate-100 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
-      >
-        Create Batches
-        <FolderArrowDownIcon className="w-5" />{" "}
-      </button>
+      {renderInputField()}
+      {renderCreateButton()}
     </div>
   );
 };

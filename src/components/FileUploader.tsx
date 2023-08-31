@@ -2,33 +2,29 @@ import React, { useState, useRef } from "react";
 import Papa from "papaparse";
 import FileSegmenter from "./FileSegmenter";
 import FileBatcher from "./FileBatcher";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "./ui/ErrorMessage";
+import UploadButton from "./ui/upload";
+import useDragAndDrop from "../hooks/useDragAndDrop";
+import IconButton from "./ui/IconButton";
 
 import {
   XMarkIcon,
-  ArrowUpTrayIcon,
   BeakerIcon,
   DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 
 const FileUploader: React.FC = () => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [parsedData, setParsedData] = useState<string[][]>([]);
   const [segmentError, setSegmentError] = useState<string | null>(null);
   const [batchError, setBatchError] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [errorField, setErrorField] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [parsedData, setParsedData] = useState<string[][]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const resetFileState = () => {
-    setSelectedFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
+  const [showUpload, setShowUpload] = useState<boolean>(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-
     // Reset any previous errors
     setUploadError(null);
 
@@ -59,9 +55,7 @@ const FileUploader: React.FC = () => {
     }
   };
 
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleButtonClick = () => fileInputRef.current?.click();
 
   const removeFile = () => {
     setSelectedFile(null);
@@ -72,25 +66,9 @@ const FileUploader: React.FC = () => {
     setBatchError(null);
   };
 
-  const handleDragEvents = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    const file = files[0];
-    if (file) {
-      // Create a simulated event to pass to handleFileChange
-      const simulatedEvent = {
-        target: {
-          files: e.dataTransfer.files,
-        },
-      } as React.ChangeEvent<HTMLInputElement>;
-
-      handleFileChange(simulatedEvent);
-    }
-  };
+  const { handleDragEvents, handleDrop } = useDragAndDrop({
+    onDropFile: handleFileChange,
+  });
 
   const truncateFilename = (filename: string, maxLength: number) => {
     if (filename.length > maxLength) {
@@ -99,6 +77,78 @@ const FileUploader: React.FC = () => {
     return filename;
   };
 
+  const renderErrorMessages = () => (
+    <>
+      {uploadError && (
+        <ErrorMessage
+          message={uploadError}
+          setErrorField={setErrorField}
+          errorType="uploadError"
+        />
+      )}
+      {segmentError && (
+        <ErrorMessage
+          message={segmentError}
+          setErrorField={setErrorField}
+          errorType="segmentError"
+        />
+      )}
+      {batchError && (
+        <ErrorMessage
+          message={batchError}
+          setErrorField={setErrorField}
+          errorType="batchError"
+        />
+      )}
+    </>
+  );
+
+  const renderFileSelected = () => (
+    <>
+      <div className="flex items-center bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded mb-4 gap-4 w-full">
+        <IconButton onClick={removeFile} Icon={XMarkIcon} />
+        <div className="flex items-center gap-3">
+          <span className="p-2 pr-4 pl-4 flex items-center bg-slate-700 font-normal rounded outline outline-1 outline-slate-600">
+            <DocumentTextIcon className="w-4 mr-2" />
+            {truncateFilename(selectedFile!.name, 25)}
+          </span>
+          <span className="text-slate-400">{`${parsedData.length} rows`}</span>
+        </div>
+        <FileBatcher
+          fileName={selectedFile!.name}
+          parsedData={parsedData}
+          onBatchError={setBatchError}
+        />
+      </div>
+      <FileSegmenter
+        fileName={selectedFile!.name}
+        parsedData={parsedData}
+        onSegmentError={setSegmentError}
+        onSuccessfulSegment={() => setShowUpload(true)} // Add this
+      />
+      {showUpload && (
+        <UploadButton
+          handleButtonClick={handleButtonClick}
+          handleDragEvents={handleDragEvents}
+          handleDrop={handleDrop}
+          errorField={errorField}
+          className="my-4"
+          buttonText="Upload or Drag and Drop Another File"
+        />
+      )}
+    </>
+  );
+
+  const renderFileNotSelected = () => (
+    <UploadButton
+      handleButtonClick={handleButtonClick}
+      handleDragEvents={handleDragEvents}
+      handleDrop={handleDrop}
+      errorField={errorField}
+      buttonText="Select or Drag and Drop File"
+    />
+  );
+
   return (
     <div className="p-4 bg-slate-900 flex items-center rounded-md outline outline-1 outline-slate-700">
       <div className="flex flex-col text-slate-100 p-6 items-center justify-center">
@@ -106,30 +156,7 @@ const FileUploader: React.FC = () => {
           <BeakerIcon className="w-10 fill-current text-slate-100 bg-slate-800 rounded px-2 outline outline-1 outline-slate-700" />
           <h1 className="text-4xl font-medium m-0">CSV Segmenter</h1>
         </div>
-
-        {uploadError && (
-          <ErrorMessage
-            message={uploadError}
-            setErrorField={setErrorField}
-            errorType={`${errorField}`}
-          />
-        )}
-        {segmentError && (
-          <ErrorMessage
-            message={segmentError}
-            setErrorField={setErrorField}
-            errorType={`${errorField}`}
-          />
-        )}
-
-        {batchError && (
-          <ErrorMessage
-            message={batchError}
-            setErrorField={setErrorField}
-            errorType={`${errorField}`}
-          />
-        )}
-
+        {renderErrorMessages()}
         <input
           type="file"
           accept=".csv"
@@ -137,56 +164,7 @@ const FileUploader: React.FC = () => {
           ref={fileInputRef}
           onChange={handleFileChange}
         />
-
-        {selectedFile ? (
-          <>
-            <div className="flex items-center bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded mb-4 gap-4 w-full">
-              <div>
-                <button
-                  onClick={removeFile}
-                  className="rounded outline outline-1 outline-slate-700 px-1 py-1 text-slate-400 hover:text-slate-200 hover:outline-slate-200 focus:text-slate-200 focus:outline-slate-200 transition-ease-in-out transition-all transition-duration: 225ms;
-                  "
-                >
-                  <XMarkIcon className="fill-inherit w-5 h-5" />
-                </button>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="p-2 pr-4 pl-4 flex items-center bg-slate-700 font-normal rounded outline outline-1 outline-slate-600">
-                  <DocumentTextIcon className="w-4 mr-2" />
-                  {truncateFilename(selectedFile.name, 25)}
-                </span>
-                <span className="text-slate-400">{`${parsedData.length} rows`}</span>
-              </div>
-              <FileBatcher
-                fileName={selectedFile.name}
-                parsedData={parsedData}
-                onBatchError={setBatchError}
-              />
-            </div>
-            <FileSegmenter
-              fileName={selectedFile.name}
-              parsedData={parsedData}
-              onSegmentError={setSegmentError}
-              onRefresh={resetFileState}
-            />
-          </>
-        ) : (
-          <button
-            onClick={handleButtonClick}
-            onDragOver={handleDragEvents}
-            onDragEnter={handleDragEvents}
-            onDragLeave={handleDragEvents}
-            onDrop={handleDrop}
-            className={`font-normal flex justify-center items-center w-full h-40 m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline-dashed outline-1 outline-slate-600 hover:bg-slate-700 hover:outline-slate-500 hover:shadow-lg focus:bg-slate-700 focus:outline-slate-500 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms ${
-              errorField === "uploadError"
-                ? "outline-rose-600"
-                : "outline-slate-700"
-            }`}
-          >
-            Select or Drag and Drop File
-            <ArrowUpTrayIcon className="w-5 fill-inherit" />
-          </button>
-        )}
+        {selectedFile ? renderFileSelected() : renderFileNotSelected()}
       </div>
     </div>
   );

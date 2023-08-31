@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
-import { ArrowPathIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import Button from "./ui/Button";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import Input from "./ui/Input";
 
 interface FileSegmenterProps {
   fileName: string;
   parsedData: string[][];
-  onSegmentError: (error: string | null) => void; // Callback to set error in parent
-  onRefresh: () => void;
+  onSegmentError: (error: string | null) => void;
+  onSuccessfulSegment: () => void;
 }
 
 const FileSegmenter: React.FC<FileSegmenterProps> = ({
   fileName,
   parsedData,
   onSegmentError,
-  onRefresh,
+  onSuccessfulSegment,
 }) => {
   const [startSegment, setStartSegment] = useState<number | null>(null);
   const [endSegment, setEndSegment] = useState<number | null>(null);
-  const [segmentCompleted, setSegmentCompleted] = useState<boolean>(false);
   const [errorField, setErrorField] = useState<string | null>(null);
 
   const handleSegment = () => {
@@ -25,7 +26,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
 
     if (startSegment > endSegment) {
       onSegmentError("Start segment cannot be greater than end segment.");
-      setErrorField("allSegments");
+      setErrorField("startSegment");
       return;
     }
 
@@ -38,6 +39,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
     }
     onSegmentError(null);
     setErrorField(null);
+    onSuccessfulSegment();
 
     // Get the headers and the desired segment
     const headers = [parsedData[0]];
@@ -65,64 +67,39 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
 
     // Cleanup and state reset
     URL.revokeObjectURL(url);
-    setSegmentCompleted(true);
-
-    // Clear the 'start segment' and 'end segment' inputs
     setStartSegment(null);
     setEndSegment(null);
   };
 
+  const renderInputs = () => (
+    <div className="flex items-center gap-6">
+      <Input
+        label="Start Segment"
+        type="number"
+        value={startSegment}
+        onChange={(value) => setStartSegment(value)}
+        errorField={errorField}
+        fieldName="startSegment"
+      />
+      <Input
+        label="End Segment"
+        type="number"
+        value={endSegment}
+        onChange={(value) => setEndSegment(value)}
+        errorField={errorField}
+        fieldName="endSegment"
+      />
+    </div>
+  );
+
+  const renderSegmentButton = () => (
+    <Button onClick={handleSegment} text="Segment" Icon={ArrowDownTrayIcon} />
+  );
+
   return (
     <div className="bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded flex items-center gap-6 w-full ">
-      <div className="flex items-center gap-4">
-        <label className="flex items-center gap-2 text-slate-400">
-          <span>Start Segment:</span>
-          <input
-            type="number"
-            value={startSegment || ""}
-            onChange={(e) => setStartSegment(parseInt(e.target.value))}
-            className={`bg-slate-700 text-slate-400 p-2 rounded border ${
-              errorField === "allSegments"
-                ? "border-rose-600"
-                : "border-slate-600"
-            } focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg`}
-          />
-        </label>
-        <label className="flex items-center gap-2 text-slate-400">
-          <span>End Segment:</span>
-          <input
-            type="number"
-            value={endSegment || ""}
-            onChange={(e) => setEndSegment(parseInt(e.target.value))}
-            className={`bg-slate-700 text-slate-400 p-2 rounded border ${
-              errorField === "endSegment" || errorField === "allSegments"
-                ? "border-rose-600"
-                : "border-slate-600"
-            } focus:outline focus:outline-1 outline-slate-300 focus:shadow-lg`}
-          />
-        </label>
-      </div>
-      <button
-        onClick={handleSegment}
-        className="flex ml-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded outline outline-1 outline-slate-700 font-normal hover:bg-blue-800 hover:outline-blue-800 hover:shadow-lg focus:outline-blue-800 focus:bg-blue-800 focus:text-slate-100 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
-      >
-        Segment
-        <ArrowDownTrayIcon className="w-5 fill-inherit" />
-      </button>
-      {segmentCompleted && (
-        <button
-          onClick={() => {
-            setSegmentCompleted(false); // Reset segment state
-            setStartSegment(null); // Reset start segment
-            setEndSegment(null); // Reset end segment
-            onSegmentError(null); // Clear any existing errors
-            onRefresh();
-          }}
-          className="rounded outline outline-1 outline-slate-700 p-2 first-letter:rounded text-slate-400 hover:bg-blue-800 hover:text-slate-100 hover:outline-blue-800 hover:shadow-md focus:outline-blue-800 focus:bg-blue-800 focus:text-slate-100 focus:shadow-lg transition-ease-in-out transition-all transition-duration: 225ms"
-        >
-          <ArrowPathIcon className="fill-inherit w-5 h-5" />
-        </button>
-      )}
+      {renderInputs()}
+      {renderSegmentButton()}
     </div>
   );
 };
