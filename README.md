@@ -1,8 +1,8 @@
-# RVX Labs | CSV Segmenter
+# CSV Segmenter
 
 ## About this Project
 
-RVX Labs | CSV Segmenter is a tool designed to make working with CSV files simpler and more efficient, whether you need to segment large files into smaller chunks or divide them into batches for easier data manipulation.
+CSV Segmenter is a tool designed to make working with CSV files simpler and more efficient, whether you need to segment large files into smaller chunks or divide them into batches for easier data manipulation.
 
 ### Features
 
@@ -61,8 +61,6 @@ yarn run dev
 5. Open your web browser and visit http://localhost:3000.
 
 ## How to Use the Segmenter
-
-View Step-by-Step instructions on Scribe http://bit.ly/csv-segmenter-demo
 
 1. **Upload CSV File**: Click on the "Upload" button to upload your CSV file or drag and drop a file.
 
