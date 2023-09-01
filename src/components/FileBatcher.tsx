@@ -56,6 +56,7 @@ const FileBatcher: React.FC<FileBatcherProps> = ({
       zip.file(`${fileName}-Batch-${i + 1}-${suffix}.csv`, csv);
     }
     // Generate the ZIP file and trigger the download
+    // Assign the zip file a name based on the batch size
     zip.generateAsync({ type: "blob" }).then((content) => {
       saveAs(content, `${fileName}-Batches-of-${batchSize}.zip`);
     });
