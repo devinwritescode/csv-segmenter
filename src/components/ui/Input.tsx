@@ -10,12 +10,12 @@ interface InputProps {
 }
 
 const Input: React.FC<InputProps> = ({
-  label,
-  type,
-  value,
-  onChange,
-  errorField,
-  fieldName,
+  label, // The label for the input
+  type, // The type of the input
+  value, // The value of the input
+  onChange, // The function to call when the value of the input changes
+  errorField, // The field with an error
+  fieldName, // The name of the input field with an error
 }) => {
   return (
     <div className="flex items-center gap-2 text-slate-400">
@@ -24,11 +24,12 @@ const Input: React.FC<InputProps> = ({
         type={type}
         value={value || ""}
         onChange={(e) => {
+          console.log("Current value of errorField in Input.tsx:", errorField);
           const parsedValue = parseInt(e.target.value);
-          if (!isNaN(parsedValue)) {
-            onChange(parsedValue);
-          } else {
+          if (isNaN(parsedValue)) {
             onChange(null);
+          } else {
+            onChange(parsedValue);
           }
         }}
         className={`bg-slate-700 text-slate-400 p-2 rounded border ${

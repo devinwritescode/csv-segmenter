@@ -6,6 +6,16 @@ export default {
       current: "currentColor",
     },
     extend: {
+      keyframes: {
+        slideRight: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+      },
+
+      animation: {
+        slideRight: "slideRight 10s linear forwards",
+      },
       backgroundColor: {
         rvx: "#0039cb",
         buttonBG:

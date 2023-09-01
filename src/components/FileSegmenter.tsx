@@ -7,38 +7,42 @@ import Input from "./ui/Input";
 interface FileSegmenterProps {
   fileName: string;
   parsedData: string[][];
-  onSegmentError: (error: string | null) => void;
   onSuccessfulSegment: () => void;
+  handleErrors: (message: string | null, field: string | null) => void;
+  errorField: string | null;
 }
 
 const FileSegmenter: React.FC<FileSegmenterProps> = ({
   fileName,
   parsedData,
-  onSegmentError,
   onSuccessfulSegment,
+  handleErrors,
+  errorField,
 }) => {
   const [startSegment, setStartSegment] = useState<number | null>(null);
   const [endSegment, setEndSegment] = useState<number | null>(null);
-  const [errorField, setErrorField] = useState<string | null>(null);
-
   const handleSegment = () => {
-    if (!startSegment || !endSegment) return;
+    if (!startSegment || !endSegment) {
+      handleErrors("Input a start and end segment", "startSegment");
+      return;
+    }
 
     if (startSegment > endSegment) {
-      onSegmentError("Start segment cannot be greater than end segment.");
-      setErrorField("startSegment");
+      handleErrors(
+        "Start segment cannot be greater than end segment",
+        "startSegment"
+      );
       return;
     }
 
     if (endSegment > parsedData.length || startSegment > endSegment) {
-      onSegmentError(
-        "Selected segment exceeds the number of rows in your file."
+      handleErrors(
+        "Selected segment exceeds the number of rows in your file",
+        "endSegment"
       );
-      setErrorField("endSegment");
       return;
     }
-    onSegmentError(null);
-    setErrorField(null);
+    handleErrors(null, null);
     onSuccessfulSegment();
 
     // Get the headers and the desired segment

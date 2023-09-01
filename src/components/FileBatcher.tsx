@@ -9,32 +9,30 @@ import InputWithPlaceholder from "./ui/InputWithPlaceholder";
 interface FileBatcherProps {
   fileName: string;
   parsedData: string[][];
-  onBatchError: (error: string | null) => void;
+  handleErrors: (message: string | null, field: string | null) => void;
+  errorField: string | null;
 }
 
 const FileBatcher: React.FC<FileBatcherProps> = ({
   fileName,
   parsedData,
-  onBatchError,
+  handleErrors,
+  errorField,
 }) => {
   const [batchSize, setBatchSize] = useState<number | null>(null);
-  const [errorField, setErrorField] = useState<string | null>(null);
 
   const createBatches = () => {
     if (!batchSize) {
-      onBatchError("Error | Refresh Browser");
+      handleErrors("Input a number to batch.", "batch");
       return;
     }
 
     if (batchSize >= parsedData.length) {
-      onBatchError("Batch size exceeds row count.");
-      setErrorField("batchSize");
-
+      handleErrors("Batch size exceeds row count.", "batch");
       return;
     }
 
-    onBatchError(null);
-    setErrorField(null);
+    handleErrors(null, null);
 
     const zip = new JSZip();
 
@@ -68,7 +66,7 @@ const FileBatcher: React.FC<FileBatcherProps> = ({
         }
       }}
       errorField={errorField}
-      fieldName="batchSize"
+      fieldName="batch"
     />
   );
 

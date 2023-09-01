@@ -5,6 +5,7 @@ import FileBatcher from "./FileBatcher";
 import ErrorMessage from "./ui/ErrorMessage";
 import UploadButton from "./ui/UploadButton";
 import useDragAndDrop from "../hooks/useDragAndDrop";
+import useErrorHandling from "../hooks/useErrorHandling";
 import IconButton from "./ui/IconButton";
 
 import {
@@ -17,30 +18,30 @@ const FileUploader: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [parsedData, setParsedData] = useState<string[][]>([]);
-  const [segmentError, setSegmentError] = useState<string | null>(null);
-  const [batchError, setBatchError] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [errorField, setErrorField] = useState<string | null>(null);
   const [showUpload, setShowUpload] = useState<boolean>(false);
+  const { errorMessage, errorField, handleErrors, isVisible, animationKey } =
+    useErrorHandling();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     // Reset any previous errors
-    setUploadError(null);
+    handleErrors(null, null);
 
     if (file) {
       // Check for file extension
       if (file.type !== "text/csv") {
-        setUploadError("Invalid file. Please upload a .CSV");
-        setErrorField("uploadError");
+        handleErrors("Invalid file. Please upload a .CSV", "uploadError");
         return;
       }
 
       // Check for file size (500 * 1024 * 1024 = 524288000 bytes = 500MB)
       if (file.size > 524288000) {
-        setUploadError("File size too large. Max file size is 500mb");
-        setErrorField("uploadError");
-        return;
+        handleErrors(
+          "File size too large. Max file size is 500mb",
+          "uploadError"
+        );
+      } else {
+        handleErrors(null, null);
       }
 
       // Continue with existing logic
@@ -62,8 +63,7 @@ const FileUploader: React.FC = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    setSegmentError(null);
-    setBatchError(null);
+    handleErrors(null, null);
   };
 
   const { handleDragEvents, handleDrop } = useDragAndDrop({
@@ -79,25 +79,12 @@ const FileUploader: React.FC = () => {
 
   const renderErrorMessages = () => (
     <>
-      {uploadError && (
+      {errorMessage && (
         <ErrorMessage
-          message={uploadError}
-          setErrorField={setErrorField}
-          errorType="uploadError"
-        />
-      )}
-      {segmentError && (
-        <ErrorMessage
-          message={segmentError}
-          setErrorField={setErrorField}
-          errorType="segmentError"
-        />
-      )}
-      {batchError && (
-        <ErrorMessage
-          message={batchError}
-          setErrorField={setErrorField}
-          errorType="batchError"
+          message={errorMessage}
+          handleErrors={handleErrors}
+          isVisible={isVisible}
+          animationKey={animationKey}
         />
       )}
     </>
@@ -106,7 +93,11 @@ const FileUploader: React.FC = () => {
   const renderFileSelected = () => (
     <>
       <div className="flex items-center bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded mb-4 gap-4 w-full">
-        <IconButton onClick={removeFile} Icon={XMarkIcon} />
+        <IconButton
+          onClick={removeFile}
+          Icon={XMarkIcon}
+          className="rounded-full"
+        />
         <div className="flex items-center gap-3">
           <span className="p-2 pr-4 pl-4 flex items-center bg-slate-700 font-normal rounded outline outline-1 outline-slate-600">
             <DocumentTextIcon className="w-4 mr-2" />
@@ -117,23 +108,25 @@ const FileUploader: React.FC = () => {
         <FileBatcher
           fileName={selectedFile!.name}
           parsedData={parsedData}
-          onBatchError={setBatchError}
+          handleErrors={handleErrors}
+          errorField={errorField}
         />
       </div>
       <FileSegmenter
         fileName={selectedFile!.name}
         parsedData={parsedData}
-        onSegmentError={setSegmentError}
-        onSuccessfulSegment={() => setShowUpload(true)} // Add this
+        handleErrors={handleErrors}
+        errorField={errorField}
+        onSuccessfulSegment={() => setShowUpload(true)}
       />
       {showUpload && (
         <UploadButton
           handleButtonClick={handleButtonClick}
           handleDragEvents={handleDragEvents}
           handleDrop={handleDrop}
-          errorField={errorField}
           className="my-4"
-          buttonText="Upload or Drag and Drop Another File"
+          buttonText="Select or Drag and Drop Another File"
+          errorField={errorField}
         />
       )}
     </>
@@ -144,8 +137,9 @@ const FileUploader: React.FC = () => {
       handleButtonClick={handleButtonClick}
       handleDragEvents={handleDragEvents}
       handleDrop={handleDrop}
+      className="my-4"
+      buttonText="Select or Drag and Drop Another File"
       errorField={errorField}
-      buttonText="Select or Drag and Drop File"
     />
   );
 
@@ -153,7 +147,7 @@ const FileUploader: React.FC = () => {
     <div className="p-4 bg-slate-900 flex items-center rounded-md outline outline-1 outline-slate-700">
       <div className="flex flex-col text-slate-100 p-6 items-center justify-center">
         <div className="gap-3 flex justify-center mb-10">
-          <BeakerIcon className="w-10 fill-current text-slate-100 bg-slate-800 rounded px-2 outline outline-1 outline-slate-700" />
+          <BeakerIcon className="w-10 text-slate-100 bg-slate-800 rounded px-2 outline outline-1 outline-slate-700" />
           <h1 className="text-4xl font-medium m-0">CSV Segmenter</h1>
         </div>
         {renderErrorMessages()}

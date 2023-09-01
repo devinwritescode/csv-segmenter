@@ -5,18 +5,18 @@ interface UploadButtonProps {
   handleButtonClick: () => void;
   handleDragEvents: (e: React.DragEvent) => void;
   handleDrop: (e: React.DragEvent) => void;
-  errorField: string | null;
   className?: string;
   buttonText?: string;
+  errorField: string | null;
 }
 
 const UploadButton: React.FC<UploadButtonProps> = ({
   handleButtonClick,
   handleDragEvents,
   handleDrop,
-  errorField,
   className,
   buttonText,
+  errorField,
 }) => {
   return (
     <button
@@ -27,8 +27,7 @@ const UploadButton: React.FC<UploadButtonProps> = ({
       onDrop={handleDrop}
       className={`font-normal flex justify-center items-center w-full h-40 m-auto gap-3 bg-slate-800 text-slate-100 px-4 py-2 rounded border border-dashed  hover:bg-slate-700 hover:border-slate-500 hover:shadow-lg focus:bg-slate-700 focus:border-slate-500 focus:shadow-lg ${
         errorField === "uploadError" ? "border-rose-600" : "border-slate-600"
-      } transition-ease-in-out transition-all transition-duration: 225ms 
-      ${className}`}
+      } transition-ease-in-out transition-all transition-duration: 225ms ${className}`}
     >
       {buttonText}
       <ArrowUpTrayIcon className="w-5 fill-inherit" />
