@@ -19,11 +19,11 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   animationKey,
 }) => {
   const animationRef = useRef<HTMLDivElement | null>(null);
-
+  // clear errors when the user clicks the XMarkIcon
   const clearErrorMessage = () => {
     handleErrors(null, null);
   };
-
+  // reset animation when the error message changes
   useEffect(() => {
     if (animationRef.current) {
       animationRef.current.classList.remove("animate-slideRight");

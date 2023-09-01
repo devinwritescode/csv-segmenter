@@ -30,6 +30,7 @@ const FileUploader: React.FC = () => {
     if (file) {
       // Check for file extension
       if (file.type !== "text/csv") {
+        // throw new Error("Invalid file. Please upload a .CSV"); and add uploadError to errorField within handleErrors
         handleErrors("Invalid file. Please upload a .CSV", "uploadError");
         return;
       }
@@ -37,16 +38,18 @@ const FileUploader: React.FC = () => {
       // Check for file size (500 * 1024 * 1024 = 524288000 bytes = 500MB)
       if (file.size > 524288000) {
         handleErrors(
+          // throw new Error ("File size too large. Max file size is 500mb"); and add uploadError to errorField within handleErrors
           "File size too large. Max file size is 500mb",
           "uploadError"
         );
       } else {
+        // if no errors, reset errorField and errorMessage
         handleErrors(null, null);
       }
 
-      // Continue with existing logic
+      // Set the selected file
       setSelectedFile(file);
-
+      // use papaparse to parse the file
       Papa.parse(file, {
         skipEmptyLines: true,
         complete: (result) => {
@@ -56,8 +59,10 @@ const FileUploader: React.FC = () => {
     }
   };
 
+  // on button click trigger file input click. This allows us to style the button and hide the input.
   const handleButtonClick = () => fileInputRef.current?.click();
 
+  // Removes the file from state and resets the file input as well as the error messages if they are present.
   const removeFile = () => {
     setSelectedFile(null);
     if (fileInputRef.current) {
@@ -66,10 +71,12 @@ const FileUploader: React.FC = () => {
     handleErrors(null, null);
   };
 
+  // Drag and drop functionality used in the UploadButton component.
   const { handleDragEvents, handleDrop } = useDragAndDrop({
     onDropFile: handleFileChange,
   });
 
+  // file name truncation function. If the file name is longer than 25 characters, truncate it and add an ellipsis.
   const truncateFilename = (filename: string, maxLength: number) => {
     if (filename.length > maxLength) {
       return `${filename.substring(0, maxLength - 3)}...`;
@@ -77,6 +84,7 @@ const FileUploader: React.FC = () => {
     return filename;
   };
 
+  // Render the error messages if they are present and pass error props to the ErrorMessage component.
   const renderErrorMessages = () => (
     <>
       {errorMessage && (
@@ -90,6 +98,7 @@ const FileUploader: React.FC = () => {
     </>
   );
 
+  // Render the file FileBatcher and FileSegmenter if a file is selected.
   const renderFileSelected = () => (
     <>
       <div className="flex items-center bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded mb-4 gap-4 w-full">
@@ -120,6 +129,7 @@ const FileUploader: React.FC = () => {
         onSuccessfulSegment={() => setShowUpload(true)}
       />
       {showUpload && (
+        // Shows UploadButton again underneath FileSegmenter once you've segmented a file.
         <UploadButton
           handleButtonClick={handleButtonClick}
           handleDragEvents={handleDragEvents}
@@ -132,6 +142,7 @@ const FileUploader: React.FC = () => {
     </>
   );
 
+  // Render the UploadButton if no file is selected.
   const renderFileNotSelected = () => (
     <UploadButton
       handleButtonClick={handleButtonClick}
@@ -142,7 +153,7 @@ const FileUploader: React.FC = () => {
       errorField={errorField}
     />
   );
-
+  // Render the FileUploader component.
   return (
     <div className="p-4 bg-slate-900 flex items-center rounded-md outline outline-1 outline-slate-700">
       <div className="flex flex-col text-slate-100 p-6 items-center justify-center">

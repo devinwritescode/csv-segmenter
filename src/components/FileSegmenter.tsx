@@ -21,6 +21,8 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
 }) => {
   const [startSegment, setStartSegment] = useState<number | null>(null);
   const [endSegment, setEndSegment] = useState<number | null>(null);
+
+  // handleSegment takes the startSegment and endSegment values and checks for errors
   const handleSegment = () => {
     if (!startSegment || !endSegment) {
       handleErrors("Input a start and end segment", "startSegment");
@@ -75,6 +77,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
     setEndSegment(null);
   };
 
+  // pretty self explanatory
   const renderInputs = () => (
     <div className="flex items-center gap-6">
       <Input

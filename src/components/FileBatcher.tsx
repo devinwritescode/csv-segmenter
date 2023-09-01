@@ -21,6 +21,7 @@ const FileBatcher: React.FC<FileBatcherProps> = ({
 }) => {
   const [batchSize, setBatchSize] = useState<number | null>(null);
 
+  // Create batches takes the batchSize value and checks for errors
   const createBatches = () => {
     if (!batchSize) {
       handleErrors("Input a number to batch.", "batch");
@@ -34,6 +35,7 @@ const FileBatcher: React.FC<FileBatcherProps> = ({
 
     handleErrors(null, null);
 
+    // Create a new ZIP file
     const zip = new JSZip();
 
     // Logic to divide `parsedData` into batches and add them to the ZIP
@@ -46,11 +48,14 @@ const FileBatcher: React.FC<FileBatcherProps> = ({
 
       const endIndex = isFinalBatch ? j : i + batchSize;
 
+      // if the final batch is less than the batch size
+      // use the end index to change the suffix of the last downloaded file in the zip.
       const suffix = isFinalBatch ? `${endIndex}` : `to-${i + batchSize}`;
 
+      //Add the CSV files to the ZIP and assign them a name based on the batch number
       zip.file(`${fileName}-Batch-${i + 1}-${suffix}.csv`, csv);
     }
-
+    // Generate the ZIP file and trigger the download
     zip.generateAsync({ type: "blob" }).then((content) => {
       saveAs(content, `${fileName}-Batches-of-${batchSize}.zip`);
     });
