@@ -7,6 +7,8 @@ import UploadButton from "./ui/UploadButton";
 import useDragAndDrop from "../hooks/useDragAndDrop";
 import useErrorHandling from "../hooks/useErrorHandling";
 import IconButton from "./ui/IconButton";
+import useSuccessHandling from "../hooks/useSuccessHandling";
+import SuccessMessage from "./ui/SuccessMessage";
 
 import {
   XMarkIcon,
@@ -21,6 +23,12 @@ const FileUploader: React.FC = () => {
   const [showUpload, setShowUpload] = useState<boolean>(false);
   const { errorMessage, errorField, handleErrors, isVisible, animationKey } =
     useErrorHandling();
+  const {
+    successMessage,
+    handleSuccess,
+    isVisible: isSuccessVisible,
+    animationKey: successAnimationKey,
+  } = useSuccessHandling();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -49,6 +57,9 @@ const FileUploader: React.FC = () => {
 
       // Set the selected file
       setSelectedFile(file);
+
+      handleSuccess("Upload successful!");
+
       // use papaparse to parse the file
       Papa.parse(file, {
         skipEmptyLines: true,
@@ -98,6 +109,19 @@ const FileUploader: React.FC = () => {
     </>
   );
 
+  const renderSuccessMessages = () => (
+    <>
+      {successMessage && (
+        <SuccessMessage
+          message={successMessage}
+          handleSuccess={handleSuccess}
+          isVisible={isSuccessVisible}
+          animationKey={successAnimationKey}
+        />
+      )}
+    </>
+  );
+
   // Render the file FileBatcher and FileSegmenter if a file is selected.
   const renderFileSelected = () => (
     <>
@@ -118,6 +142,7 @@ const FileUploader: React.FC = () => {
           fileName={selectedFile!.name}
           parsedData={parsedData}
           handleErrors={handleErrors}
+          handleSuccess={handleSuccess}
           errorField={errorField}
         />
       </div>
@@ -126,6 +151,7 @@ const FileUploader: React.FC = () => {
         parsedData={parsedData}
         handleErrors={handleErrors}
         errorField={errorField}
+        handleSuccess={handleSuccess}
         onSuccessfulSegment={() => setShowUpload(true)}
       />
       {showUpload && (
@@ -137,6 +163,7 @@ const FileUploader: React.FC = () => {
           className="my-4"
           buttonText="Select or Drag and Drop Another File"
           errorField={errorField}
+          handleSuccess={handleSuccess}
         />
       )}
     </>
@@ -151,6 +178,7 @@ const FileUploader: React.FC = () => {
       className="my-4"
       buttonText="Select or Drag and Drop Another File"
       errorField={errorField}
+      handleSuccess={handleSuccess}
     />
   );
   // Render the FileUploader component.
@@ -162,6 +190,8 @@ const FileUploader: React.FC = () => {
           <h1 className="text-4xl font-medium m-0">CSV Segmenter</h1>
         </div>
         {renderErrorMessages()}
+        {renderSuccessMessages()}
+
         <input
           type="file"
           accept=".csv"

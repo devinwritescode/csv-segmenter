@@ -10,6 +10,7 @@ interface FileSegmenterProps {
   onSuccessfulSegment: () => void;
   handleErrors: (message: string | null, field: string | null) => void;
   errorField: string | null;
+  handleSuccess: (message: string) => void;
 }
 
 const FileSegmenter: React.FC<FileSegmenterProps> = ({
@@ -18,6 +19,7 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
   onSuccessfulSegment,
   handleErrors,
   errorField,
+  handleSuccess,
 }) => {
   const [startSegment, setStartSegment] = useState<number | null>(null);
   const [endSegment, setEndSegment] = useState<number | null>(null);
@@ -67,9 +69,12 @@ const FileSegmenter: React.FC<FileSegmenterProps> = ({
     // Modify the name of the downloaded file
     const originalFileName = fileName.split(".").slice(0, -1).join(".");
     const fileExtension = fileName.split(".").pop();
+
     a.download = `${originalFileName} - (${startSegment}-${endSegment}).${fileExtension}`;
 
     a.click();
+
+    handleSuccess("Segment successful!");
 
     // Cleanup and state reset
     URL.revokeObjectURL(url);

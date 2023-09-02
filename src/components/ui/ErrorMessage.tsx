@@ -26,7 +26,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   // reset animation when the error message changes
   useEffect(() => {
     if (animationRef.current) {
-      animationRef.current.classList.remove("animate-slideRight");
+      animationRef.current.classList.remove("animate-slideRightError");
 
       // Trigger reflow to reset the animation
       void animationRef.current.offsetWidth;
@@ -34,7 +34,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
       // Use setTimeout to ensure the re-addition of the class occurs in a new event loop tick
       setTimeout(() => {
         if (isVisible && animationRef.current) {
-          animationRef.current.classList.add("animate-slideRight");
+          animationRef.current.classList.add("animate-slideRightError");
         }
       }, 10);
     }

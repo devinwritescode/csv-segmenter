@@ -3,12 +3,12 @@ import React, { useCallback } from "react";
 interface DragAndDropOptions {
   onDropFile: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
-
+// drag and drop hook for file upload component
 const useDragAndDrop = ({ onDropFile }: DragAndDropOptions) => {
   const handleDragEvents = useCallback((event: React.DragEvent) => {
     event.preventDefault();
   }, []);
-
+  // handle drop event for file upload component
   const handleDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();

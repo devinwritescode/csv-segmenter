@@ -11,6 +11,7 @@ interface FileBatcherProps {
   parsedData: string[][];
   handleErrors: (message: string | null, field: string | null) => void;
   errorField: string | null;
+  handleSuccess: (message: string) => void;
 }
 
 const FileBatcher: React.FC<FileBatcherProps> = ({
@@ -18,6 +19,7 @@ const FileBatcher: React.FC<FileBatcherProps> = ({
   parsedData,
   handleErrors,
   errorField,
+  handleSuccess,
 }) => {
   const [batchSize, setBatchSize] = useState<number | null>(null);
 
@@ -60,6 +62,8 @@ const FileBatcher: React.FC<FileBatcherProps> = ({
     zip.generateAsync({ type: "blob" }).then((content) => {
       saveAs(content, `${fileName}-Batches-of-${batchSize}.zip`);
     });
+
+    handleSuccess("Batching successful!");
   };
 
   const renderInputField = () => (

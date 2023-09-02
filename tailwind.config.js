@@ -14,7 +14,8 @@ export default {
       },
 
       animation: {
-        slideRight: "slideRight 10s linear forwards",
+        slideRightError: "slideRight 10s linear forwards",
+        slideRightSuccess: "slideRight 3s linear forwards",
       },
       backgroundColor: {
         rvx: "#0039cb",
