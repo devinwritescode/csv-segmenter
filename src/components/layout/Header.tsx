@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "./nav-components/Logo";
+import Logo from "../uiItems/navbar/Logo";
 
 const Header: React.FC = () => {
   return (

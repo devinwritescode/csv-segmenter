@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
-import Button from "./ui/Button";
+import Button from "../uiItems/buttons/Button";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-import Input from "./ui/Input";
+import Input from "../uiItems/inputs/Input";
 
 interface FileSegmenterProps {
   fileName: string;

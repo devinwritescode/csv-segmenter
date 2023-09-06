@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import IconButton from "./IconButton";
+import IconButton from "../buttons/IconButton";
 
 interface SuccessMessageProps {
   message: string | null;

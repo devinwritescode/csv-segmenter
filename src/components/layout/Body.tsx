@@ -1,19 +1,19 @@
 import React, { useState, useRef } from "react";
 import Papa from "papaparse";
-import FileSegmenter from "./FileSegmenter";
-import FileBatcher from "./FileBatcher";
-import ErrorMessage from "./ui/ErrorMessage";
-import UploadButton from "./ui/UploadButton";
-import useDragAndDrop from "../hooks/useDragAndDrop";
-import useErrorHandling from "../hooks/useErrorHandling";
-import IconButton from "./ui/IconButton";
-import useSuccessHandling from "../hooks/useSuccessHandling";
-import SuccessMessage from "./ui/SuccessMessage";
+import FileSegmenter from "../functions/FileSegmenter";
+import FileBatcher from "../functions/FileBatcher";
+import ErrorMessage from "../uiItems/indicators/ErrorMessage";
+import UploadButton from "../uiItems/buttons/UploadButton";
+import useDragAndDrop from "../../hooks/useDragAndDrop";
+import useErrorHandling from "../../hooks/useErrorHandling";
+import IconButton from "../uiItems/buttons/IconButton";
+import useSuccessHandling from "../../hooks/useSuccessHandling";
+import SuccessMessage from "../uiItems/indicators/SuccessMessage";
 import { BsFiletypeCsv } from "react-icons/bs";
 
 import { XMarkIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 
-const FileUploader: React.FC = () => {
+const Body: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [parsedData, setParsedData] = useState<string[][]>([]);
@@ -202,4 +202,4 @@ const FileUploader: React.FC = () => {
   );
 };
 
-export default FileUploader;
+export default Body;

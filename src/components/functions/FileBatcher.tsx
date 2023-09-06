@@ -3,8 +3,8 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
 import { FolderArrowDownIcon } from "@heroicons/react/24/outline";
-import Button from "./ui/Button.tsx";
-import InputWithPlaceholder from "./ui/InputWithPlaceholder";
+import Button from "../uiItems/buttons/Button.tsx";
+import InputWithPlaceholder from "../uiItems/inputs/InputWithPlaceholder.tsx";
 
 interface FileBatcherProps {
   fileName: string;
