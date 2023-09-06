@@ -5,7 +5,7 @@ interface UploadButtonProps {
   handleButtonClick: () => void;
   handleDragEvents: (e: React.DragEvent) => void;
   handleDrop: (e: React.DragEvent) => void;
-  handleSuccess: (message: string) => void;
+  handleSuccess: (message: string | null) => void;
   className?: string;
   buttonText?: string;
   errorField: string | null;

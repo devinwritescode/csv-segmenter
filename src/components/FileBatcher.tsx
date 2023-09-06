@@ -11,7 +11,7 @@ interface FileBatcherProps {
   parsedData: string[][];
   handleErrors: (message: string | null, field: string | null) => void;
   errorField: string | null;
-  handleSuccess: (message: string) => void;
+  handleSuccess: (message: string | null) => void;
 }
 
 const FileBatcher: React.FC<FileBatcherProps> = ({
