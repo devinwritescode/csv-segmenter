@@ -9,12 +9,9 @@ import useErrorHandling from "../hooks/useErrorHandling";
 import IconButton from "./ui/IconButton";
 import useSuccessHandling from "../hooks/useSuccessHandling";
 import SuccessMessage from "./ui/SuccessMessage";
+import { BsFiletypeCsv } from "react-icons/bs";
 
-import {
-  XMarkIcon,
-  BeakerIcon,
-  DocumentTextIcon,
-} from "@heroicons/react/24/outline";
+import { XMarkIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 
 const FileUploader: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -186,7 +183,7 @@ const FileUploader: React.FC = () => {
     <div className="p-4 bg-slate-900 flex items-center rounded-md outline outline-1 outline-slate-700">
       <div className="flex flex-col text-slate-100 p-6 items-center justify-center">
         <div className="gap-3 flex justify-center mb-10">
-          <BeakerIcon className="w-10 text-slate-100 bg-slate-800 rounded px-2 outline outline-1 outline-slate-700" />
+          <BsFiletypeCsv className="w-10 h-10 text-slate-100 bg-slate-800 rounded p-2 outline outline-1 outline-slate-700" />
           <h1 className="text-4xl font-medium m-0">CSV Segmenter</h1>
         </div>
         {renderErrorMessages()}
