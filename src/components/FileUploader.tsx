@@ -161,7 +161,7 @@ const FileUploader: React.FC = () => {
           handleDragEvents={handleDragEvents}
           handleDrop={handleDrop}
           className="my-4"
-          buttonText="Select or Drag and Drop Another File"
+          buttonText="Select or Drag and Drop File"
           errorField={errorField}
           handleSuccess={handleSuccess}
         />
