@@ -6,12 +6,10 @@ import ErrorMessage from "../uiItems/indicators/ErrorMessage";
 import UploadButton from "../uiItems/buttons/UploadButton";
 import useDragAndDrop from "../../hooks/useDragAndDrop";
 import useErrorHandling from "../../hooks/useErrorHandling";
-import IconButton from "../uiItems/buttons/IconButton";
 import useSuccessHandling from "../../hooks/useSuccessHandling";
 import SuccessMessage from "../uiItems/indicators/SuccessMessage";
 import { BsFiletypeCsv } from "react-icons/bs";
-
-import { XMarkIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import TruncatedFile from "../uiItems/extras/TruncatedFile";
 
 const Body: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +65,7 @@ const Body: React.FC = () => {
     }
   };
 
-  // on button click trigger file input click. This allows us to style the button and hide the input.
+  // on button click trigger file input click.
   const handleButtonClick = () => fileInputRef.current?.click();
 
   // Removes the file from state and resets the file input as well as the error messages if they are present.
@@ -77,21 +75,13 @@ const Body: React.FC = () => {
       fileInputRef.current.value = "";
     }
     handleErrors(null, null);
+    handleSuccess(null);
   };
 
   // Drag and drop functionality used in the UploadButton component.
   const { handleDragEvents, handleDrop } = useDragAndDrop({
     onDropFile: handleFileChange,
   });
-
-  // file name truncation function. If the file name is longer than 25 characters, truncate it and add an ellipsis.
-  const truncateFilename = (filename: string, maxLength: number) => {
-    if (filename.length > maxLength) {
-      return `${filename.substring(0, maxLength - 3)}...`;
-    }
-    return filename;
-  };
-
   // Render the error messages if they are present and pass error props to the ErrorMessage component.
   const renderErrorMessages = () => (
     <>
@@ -123,18 +113,11 @@ const Body: React.FC = () => {
   const renderFileSelected = () => (
     <>
       <div className="flex items-center bg-slate-800 outline outline-1 outline-slate-700 p-4 rounded mb-4 gap-4 w-full">
-        <IconButton
-          onClick={removeFile}
-          Icon={XMarkIcon}
-          className="rounded-full"
+        <TruncatedFile
+          selectedFile={selectedFile!}
+          parsedData={parsedData}
+          removeFile={removeFile}
         />
-        <div className="flex items-center gap-3">
-          <span className="p-2 pr-4 pl-4 flex items-center bg-slate-700 font-normal rounded outline outline-1 outline-slate-600">
-            <DocumentTextIcon className="w-4 mr-2" />
-            {truncateFilename(selectedFile!.name, 25)}
-          </span>
-          <span className="text-slate-400">{`${parsedData.length} rows`}</span>
-        </div>
         <FileBatcher
           fileName={selectedFile!.name}
           parsedData={parsedData}
